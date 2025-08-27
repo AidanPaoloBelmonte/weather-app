@@ -11,8 +11,6 @@ async function fetchWeatherData(city) {
     },
   );
   const data = await response.json();
-  console.log(data);
 }
 
 fetchWeatherData("Tokyo");
-// console.log(`${weatherAPI}${"Tokyo"}?key=${key}&contentType=json`);
