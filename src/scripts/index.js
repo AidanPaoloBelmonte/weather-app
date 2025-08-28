@@ -1,3 +1,5 @@
+import "../styles/style.css";
+
 const weatherAPI =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
 const key = "43GQQ65K28BCAUG6QME297TQD";
@@ -13,4 +15,4 @@ async function fetchWeatherData(city) {
   const data = await response.json();
 }
 
-fetchWeatherData("Tokyo");
+// fetchWeatherData("Tokyo");
