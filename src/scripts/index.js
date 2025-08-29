@@ -69,14 +69,6 @@ async function displayWeatherData(data) {
   const currentDate = new Date();
 
   locationText.textContent = data.address;
-  dateText.textContent = currentDate.toLocaleDateString(navigator.language, {
-    ...OPTIONDAY,
-    ...OPTIONDATE,
-  });
-  timeText.textContent = currentDate.toLocaleTimeString(
-    navigator.language,
-    OPTIONTIME,
-  );
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
   conditionText.textContent = `${data.days[0].conditions}`;
@@ -109,8 +101,36 @@ async function displayWeatherData(data) {
   });
 }
 
+async function updateTimeDateDisplay() {
+  const currentDate = new Date();
+
+  if (currentDate.getMinutes() == 0) {
+    if (!timeText.dataset.rollover) {
+      currentData = await fetchWeatherData("Tokyo");
+      await displayWeatherData(currentData);
+
+      timeText.dataset.rollovr = true;
+    }
+  } else if (timeText.dataset.rollover) {
+    timeText.dataset.rollover = false;
+  }
+
+  dateText.textContent = currentDate.toLocaleDateString(navigator.language, {
+    ...OPTIONDAY,
+    ...OPTIONDATE,
+  });
+  timeText.textContent = currentDate.toLocaleTimeString(
+    navigator.language,
+    OPTIONTIME,
+  );
+
+  setTimeout(updateTimeDateDisplay, 1000);
+}
+
 window.onload = async (e) => {
+  timeText.dataset.rollover = false;
+
   currentData = await fetchWeatherData("Tokyo");
-  console.log(currentData);
   await displayWeatherData(currentData);
+  await updateTimeDateDisplay();
 };
