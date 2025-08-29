@@ -20,6 +20,7 @@ body {
     border-radius: 16px;
 }
 
+#header,
 #today,
 .next-day,
 .next-hour {
@@ -51,7 +52,10 @@ body {
     background-color: lightskyblue;
 }
 
-#location {
+#header {
+    padding: 0 12px;
+    border-radius: 12px;
+
     h2 {
         display: inline;
 
