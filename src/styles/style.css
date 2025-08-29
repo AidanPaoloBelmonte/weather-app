@@ -56,12 +56,20 @@ body {
     padding: 0 12px;
     border-radius: 12px;
 
+    display: flex;
+    align-items: center;
+
     h2 {
         display: inline;
 
         margin: 0;
         font-size: 1.8rem;
     }
+}
+
+#comment {
+    align-self: flex-end;
+    padding: 4px 12px;
 }
 
 #weather {

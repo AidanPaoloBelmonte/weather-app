@@ -38,6 +38,7 @@ const key = "43GQQ65K28BCAUG6QME297TQD";
 const locationText = document.querySelector("#location > h2");
 const dateText = document.querySelector("#date");
 const timeText = document.querySelector("#time");
+const commnetText = document.querySelector("#comment");
 const tempRealText = document.querySelector("#temp-real");
 const tempUnitText = document.querySelector("#temp-unit");
 const conditionText = document.querySelector("#condition");
@@ -69,6 +70,7 @@ async function displayWeatherData(data) {
   const currentDate = new Date();
 
   locationText.textContent = data.address;
+  comment.textContent = data.description.replace(/.([^.]*)$/, "");
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
   conditionText.textContent = `${data.days[0].conditions}`;
@@ -117,7 +119,7 @@ async function updateTimeDateDisplay() {
       currentData = await fetchWeatherData("Tokyo");
       await displayWeatherData(currentData);
 
-      timeText.dataset.rollovr = true;
+      timeText.dataset.rollover = true;
     }
   } else if (timeText.dataset.rollover) {
     timeText.dataset.rollover = false;
