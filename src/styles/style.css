@@ -20,8 +20,20 @@ body {
     border-radius: 16px;
 }
 
+#today,
 .next-day,
 .next-hour {
+    box-shadow: 2px 2px 0.4px rgb(210, 247, 255, 0.2);
+}
+
+.next-day,
+.next-hour {
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     background-color: rgba(104, 121, 208, 0.2);
 }
 
@@ -56,9 +68,9 @@ body {
 }
 
 #today {
-    flex: 5 0.2 auto;
+    padding-top: 8px;
 
-    padding: 12px;
+    flex: 5 0.2 auto;
 
     display: flex;
     flex-direction: column;
@@ -69,11 +81,15 @@ body {
 }
 
 #date {
-    font-size: mrem;
+    padding-left: 12px;
+
+    font-size: 1rem;
     font-weight: bold;
 }
 
 #time {
+    padding-left: 12px;
+
     font-size: 2rem;
 }
 
@@ -127,4 +143,22 @@ body {
 
 .next-day {
     flex: 1 1 min(10%, 96px);
+}
+
+.next-dayname,
+.next-date {
+    font-weight: bold;
+}
+
+.next-icon {
+    flex: 1 auto;
+}
+
+.next-temp {
+    flex-basis: 17%;
+    font-size: 2.4rem;
+}
+
+.next-hour > .next-temp {
+    font-size: 1.5rem;
 }
