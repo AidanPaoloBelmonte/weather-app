@@ -91,7 +91,7 @@ async function displayWeatherData(data) {
     let day = 0;
 
     if (hour > 23) {
-      hour = hour - 23;
+      hour = hour - 24;
       day = 1;
     }
 
