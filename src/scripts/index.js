@@ -87,7 +87,15 @@ async function displayWeatherData(data) {
   });
 
   nextHourDisplays.forEach((display, index) => {
-    const nextData = data.days[0].hours[currentDate.getHours() + index + 1];
+    let hour = currentDate.getHours() + index + 1;
+    let day = 0;
+
+    if (hour > 23) {
+      hour = hour - 23;
+      day = 1;
+    }
+
+    const nextData = data.days[day].hours[hour];
     const nextDate = new Date(
       currentDate.getTime() +
         60 * 60 * 1000 * (index + 1) -
