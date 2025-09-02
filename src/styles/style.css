@@ -38,6 +38,10 @@ body {
     background-color: rgba(104, 121, 208, 0.2);
 }
 
+.spacer {
+    flex: 1 1 auto;
+}
+
 /* Main */
 #page {
     width: 100%;
@@ -69,7 +73,28 @@ body {
 
 #comment {
     align-self: flex-end;
-    padding: 4px 12px;
+    padding: 4px 8px;
+
+    color: dimgray;
+}
+
+#options {
+    display: flex;
+    gap: 8px;
+
+    button {
+        background-color: transparent;
+        border: 0px;
+    }
+}
+
+#search > input {
+    width: 12rem;
+    padding: 0px 1.1rem;
+    border-radius: 12px;
+    border: 0px;
+
+    font-size: 1.1rem;
 }
 
 #weather {
