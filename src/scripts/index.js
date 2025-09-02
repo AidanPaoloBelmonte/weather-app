@@ -52,6 +52,29 @@ const optionsBar = document.querySelector("#options");
 let isFahrenheit = true;
 let currentData = undefined;
 
+async function fetchWeatherData(city) {
+  if (!city) {
+    console.log("No City!");
+    return;
+  }
+
+  const currentDate = new Date();
+  const start = currentDate.toISOString().slice(0, 10);
+
+  currentDate.setTime(currentDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+  const end = currentDate.toISOString().slice(0, 10);
+
+  const response = await fetch(
+    `${weatherAPI}${city}/${start}/${end}?unitGroup=us&elements=datetime%2Caddress%2Ctemp%2Cfeelslike%2Cconditions%2Cdescription%2Cicon&key=${key}&contentType=json`,
+    {
+      method: "GET",
+      headers: {},
+    },
+  );
+
+  return await response.json();
+}
+
 optionsBar.addEventListener("click", (e) => {
   const currentDate = new Date();
 
@@ -114,27 +137,16 @@ optionsBar.addEventListener("click", (e) => {
   }
 });
 
-async function fetchWeatherData(city) {
-  if (!city) {
-    console.log("No City!");
-    return;
-  }
-
-  const response = await fetch(
-    `${weatherAPI}${city}?unitGroup=us&key=${key}&contentType=json`,
-    {
-      method: "GET",
-      headers: {},
-    },
-  );
-
-  return await response.json();
-}
-
 async function displayWeatherData(data) {
   const currentDate = new Date();
 
-  locationText.textContent = data.address;
+  let locationName = data.resolvedAddress;
+  if (locationName.indexOf(",") > -1) {
+    locationName = locationName.substring(0, locationName.indexOf(","));
+  }
+  locationName = locationName.charAt(0).toUpperCase() + locationName.slice(1);
+
+  locationText.textContent = locationName;
   commentText.textContent = data.description.replace(/.([^.]*)$/, "");
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
@@ -210,7 +222,7 @@ function toCelsius(value) {
 window.onload = async (e) => {
   timeText.dataset.rollover = false;
 
-  currentData = await fetchWeatherData("Tokyo");
+  currentData = await fetchWeatherData("jakarta");
   await displayWeatherData(currentData);
   await updateTimeDateDisplay();
 };
