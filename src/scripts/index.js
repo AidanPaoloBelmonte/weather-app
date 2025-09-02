@@ -38,7 +38,7 @@ const key = "43GQQ65K28BCAUG6QME297TQD";
 const locationText = document.querySelector("#location > h2");
 const dateText = document.querySelector("#date");
 const timeText = document.querySelector("#time");
-const commnetText = document.querySelector("#comment");
+const commentText = document.querySelector("#comment");
 const tempRealText = document.querySelector("#temp-real");
 const tempUnitText = document.querySelector("#temp-unit");
 const conditionText = document.querySelector("#condition");
@@ -47,7 +47,55 @@ const feelText = document.querySelector("#feel");
 const nextDayDisplays = document.querySelectorAll(".next-day");
 const nextHourDisplays = document.querySelectorAll(".next-hour");
 
+const optionsBar = document.querySelector("#options");
+
+let isFahrenheit = true;
 let currentData = undefined;
+
+optionsBar.addEventListener("click", (e) => {
+  const currentDate = new Date();
+
+  if (e.target.id === "toggle-temp") {
+    isFahrenheit = !isFahrenheit;
+
+    let currentTemp = currentData.days[0].temp;
+    if (!isFahrenheit) {
+      currentTemp = toCelsius(currentTemp);
+    }
+
+    tempRealText.textContent = `${currentTemp}°`;
+    tempUnitText.textContent = isFahrenheit ? "F" : "C";
+
+    nextDayDisplays.forEach((display, index) => {
+      const nextData = currentData.days[index + 1];
+
+      let temp = nextData.temp;
+      if (!isFahrenheit) {
+        temp = toCelsius(temp);
+      }
+
+      display.querySelector(".next-temp").textContent = `${temp}°`;
+    });
+
+    nextHourDisplays.forEach((display, index) => {
+      let hour = currentDate.getHours() + index + 1;
+      let day = 0;
+
+      if (hour > 23) {
+        hour = hour - 24;
+        day = 1;
+      }
+
+      const nextData = currentData.days[day].hours[hour];
+      let temp = nextData.temp;
+      if (!isFahrenheit) {
+        temp = toCelsius(temp);
+      }
+
+      display.querySelector(".next-temp").textContent = `${temp}°`;
+    });
+  }
+});
 
 async function fetchWeatherData(city) {
   if (!city) {
@@ -70,7 +118,7 @@ async function displayWeatherData(data) {
   const currentDate = new Date();
 
   locationText.textContent = data.address;
-  comment.textContent = data.description.replace(/.([^.]*)$/, "");
+  commentText.textContent = data.description.replace(/.([^.]*)$/, "");
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
   conditionText.textContent = `${data.days[0].conditions}`;
@@ -135,6 +183,11 @@ async function updateTimeDateDisplay() {
   );
 
   setTimeout(updateTimeDateDisplay, 1000);
+}
+
+function toCelsius(value) {
+  let celsius = ((value - 32) * 5) / 9;
+  return Math.round((celsius + Number.EPSILON) * 10) / 10;
 }
 
 window.onload = async (e) => {
