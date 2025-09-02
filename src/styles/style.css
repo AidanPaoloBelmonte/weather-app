@@ -42,6 +42,41 @@ body {
     flex: 1 1 auto;
 }
 
+.icon-target.snow {
+    background-image: url("../assets/snow.svg");
+}
+
+.icon-target.rain {
+    background-image: url("../assets/rain.svg");
+}
+
+.icon-target.fog {
+    background-image: url("../assets/fog.svg");
+}
+
+.icon-target.wind {
+    background-image: url("../assets/wind.svg");
+}
+
+.icon-target.cloudy {
+    background-image: url("../assets/cloudy.svg");
+}
+
+.icon-target.partly-cloudy-day {
+    background-image: url("../assets/partly-cloudy-day.svg");
+}
+
+.icon-target.partly-cloudy-night {
+    background-image: url("../assets/partly-cloudy-night.svg");
+}
+
+.icon-target.clear-day {
+    background-image: url("../assets/clear-day.svg");
+}
+.icon-target.clear-night {
+    background-image: url("../assets/clear-night.svg");
+}
+
 /* Main */
 #page {
     width: 100%;
@@ -80,12 +115,34 @@ body {
 
 #options {
     display: flex;
+    justify-content: space-evenly;
+    align-items: stretch;
     gap: 8px;
 
     button {
-        background-color: transparent;
+        width: 24px;
         border: 0px;
+
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
+}
+
+#toggle-hour {
+    background-image: url("../assets/hours-24.svg");
+}
+
+#toggle-hour.toggled {
+    background-image: url("../assets/hours-12.svg");
+}
+
+#toggle-temp {
+    background-image: url("../assets/temperature-fahrenheit.svg");
+}
+
+#toggle-temp.toggled {
+    background-image: url("../assets/temperature-celsius.svg");
 }
 
 #search > input {
@@ -144,6 +201,13 @@ body {
     );
 }
 
+#weather-icon {
+    height: 144px;
+    aspect-ratio: 1 / 1;
+
+    background-size: cover;
+}
+
 #temperature {
     display: flex;
 }
@@ -187,8 +251,22 @@ body {
     font-weight: bold;
 }
 
+.icon-container {
+    flex: 1 auto;
+    align-self: stretch;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .next-icon {
     flex: 1 auto;
+
+    aspect-ratio: 1 / 1;
+    margin: 4px;
+
+    background-size: cover;
 }
 
 .next-temp {

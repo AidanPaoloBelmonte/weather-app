@@ -39,6 +39,7 @@ const locationText = document.querySelector("#location > h2");
 const dateText = document.querySelector("#date");
 const timeText = document.querySelector("#time");
 const commentText = document.querySelector("#comment");
+const weatherIcon = document.querySelector("#weather-icon");
 const tempRealText = document.querySelector("#temp-real");
 const tempUnitText = document.querySelector("#temp-unit");
 const conditionText = document.querySelector("#condition");
@@ -81,6 +82,7 @@ optionsBar.addEventListener("click", (e) => {
   // Toggle Temperature
   if (e.target.id === "toggle-temp") {
     isFahrenheit = !isFahrenheit;
+    e.target.classList.toggle("toggled");
 
     let currentTemp = currentData.days[0].temp;
     if (!isFahrenheit) {
@@ -121,6 +123,7 @@ optionsBar.addEventListener("click", (e) => {
     // Toggle Hour Format
   } else if (e.target.id === "toggle-hour") {
     OPTIONTIME.hour12 = !OPTIONTIME.hour12;
+    e.target.classList.toggle("toggled");
 
     updateTimeDateDisplay(true);
 
@@ -148,6 +151,7 @@ async function displayWeatherData(data) {
 
   locationText.textContent = locationName;
   commentText.textContent = data.description.replace(/.([^.]*)$/, "");
+  weatherIcon.classList = `icon-target ${data.days[0].icon}`;
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
   conditionText.textContent = `${data.days[0].conditions}`;
@@ -161,8 +165,10 @@ async function displayWeatherData(data) {
       nextDate.toLocaleDateString(navigator.language, OPTIONDAY);
     display.querySelector(".next-date").textContent =
       nextDate.toLocaleDateString(navigator.language, OPTIONDATE);
-    // display.querySelector(".next-icon");
     display.querySelector(".next-temp").textContent = `${nextData.temp}°`;
+
+    let iconDisplay = display.querySelector(".next-icon");
+    iconDisplay.classList = `next-icon icon-target ${nextData.icon}`;
   });
 
   nextHourDisplays.forEach((display, index) => {
@@ -183,8 +189,10 @@ async function displayWeatherData(data) {
 
     display.querySelector(".next-hourname").textContent =
       nextDate.toLocaleTimeString(navigator.language, OPTIONTIME);
-    // display.querySelector(".next-icon");
     display.querySelector(".next-temp").textContent = `${nextData.temp}°`;
+
+    let iconDisplay = display.querySelector(".next-icon");
+    iconDisplay.classList = `next-icon icon-target ${nextData.icon}`;
   });
 }
 
