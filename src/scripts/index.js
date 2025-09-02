@@ -55,6 +55,7 @@ let currentData = undefined;
 optionsBar.addEventListener("click", (e) => {
   const currentDate = new Date();
 
+  // Toggle Temperature
   if (e.target.id === "toggle-temp") {
     isFahrenheit = !isFahrenheit;
 
@@ -93,6 +94,22 @@ optionsBar.addEventListener("click", (e) => {
       }
 
       display.querySelector(".next-temp").textContent = `${temp}°`;
+    });
+    // Toggle Hour Format
+  } else if (e.target.id === "toggle-hour") {
+    OPTIONTIME.hour12 = !OPTIONTIME.hour12;
+
+    updateTimeDateDisplay(true);
+
+    nextHourDisplays.forEach((display, index) => {
+      const nextDate = new Date(
+        currentDate.getTime() +
+          60 * 60 * 1000 * (index + 1) -
+          currentDate.getMinutes() * 60 * 1000,
+      );
+
+      display.querySelector(".next-hourname").textContent =
+        nextDate.toLocaleTimeString(navigator.language, OPTIONTIME);
     });
   }
 });
@@ -159,7 +176,7 @@ async function displayWeatherData(data) {
   });
 }
 
-async function updateTimeDateDisplay() {
+async function updateTimeDateDisplay(oneshot = false) {
   const currentDate = new Date();
 
   if (currentDate.getMinutes() == 0) {
@@ -182,7 +199,7 @@ async function updateTimeDateDisplay() {
     OPTIONTIME,
   );
 
-  setTimeout(updateTimeDateDisplay, 1000);
+  if (!oneshot) setTimeout(updateTimeDateDisplay, 1000);
 }
 
 function toCelsius(value) {
