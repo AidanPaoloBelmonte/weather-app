@@ -145,13 +145,47 @@ body {
     background-image: url("../assets/temperature-celsius.svg");
 }
 
+#search {
+    position: relative;
+}
+
 #search > input {
     width: 12rem;
-    padding: 0px 1.1rem;
+    padding: 0px 2.2rem 0px 1.1rem;
     border-radius: 12px;
     border: 0px;
 
     font-size: 1.1rem;
+}
+
+#search > button {
+    height: 100%;
+
+    position: absolute;
+    top: 0%;
+    right: 0.5rem;
+
+    background-image: url("../assets/magnify.svg");
+    background-size: cover;
+}
+
+#error {
+    display: none;
+    position: absolute;
+    right: 0;
+
+    border-radius: 12px;
+    padding: 8px;
+    margin: 8px 0px;
+
+    white-space: nowrap;
+
+    background-color: orangered;
+    color: white;
+}
+
+#error.show {
+    display: block;
 }
 
 #weather {

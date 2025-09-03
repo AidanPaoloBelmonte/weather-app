@@ -49,6 +49,8 @@ const nextDayDisplays = document.querySelectorAll(".next-day");
 const nextHourDisplays = document.querySelectorAll(".next-hour");
 
 const optionsBar = document.querySelector("#options");
+const searchBar = document.querySelector("#search > input");
+const errorDisplay = document.querySelector("#error");
 
 let isFahrenheit = true;
 let currentData = undefined;
@@ -73,10 +75,17 @@ async function fetchWeatherData(city) {
     },
   );
 
-  return await response.json();
+  let asJSON = false;
+  try {
+    asJSON = await response.json();
+  } catch (error) {
+    asJSON = false;
+  }
+
+  return asJSON;
 }
 
-optionsBar.addEventListener("click", (e) => {
+optionsBar.addEventListener("click", async (e) => {
   const currentDate = new Date();
 
   // Toggle Temperature
@@ -137,6 +146,16 @@ optionsBar.addEventListener("click", (e) => {
       display.querySelector(".next-hourname").textContent =
         nextDate.toLocaleTimeString(navigator.language, OPTIONTIME);
     });
+  } else if (e.target.id === "search-submit") {
+    const city = searchBar.value;
+
+    currentData = await fetchWeatherData(city);
+    if (currentData) {
+      await displayWeatherData(currentData);
+      updateTimeDateDisplay(true);
+    } else {
+      displayNotFoundError(city);
+    }
   }
 });
 
@@ -150,7 +169,11 @@ async function displayWeatherData(data) {
   locationName = locationName.charAt(0).toUpperCase() + locationName.slice(1);
 
   locationText.textContent = locationName;
-  commentText.textContent = data.description.replace(/.([^.]*)$/, "");
+  if ("description" in data) {
+    commentText.textContent = data.description.replace(/.([^.]*)$/, "");
+  } else {
+    commentText.textContent = "";
+  }
   weatherIcon.classList = `icon-target ${data.days[0].icon}`;
   tempRealText.textContent = `${data.days[0].temp}°`;
   tempUnitText.textContent = "F";
@@ -220,6 +243,17 @@ async function updateTimeDateDisplay(oneshot = false) {
   );
 
   if (!oneshot) setTimeout(updateTimeDateDisplay, 1000);
+}
+
+async function displayNotFoundError(city) {
+  error.textContent = `${city} was not found`;
+  error.classList.add("show");
+
+  setTimeout(closeNotFoundError, 3000);
+}
+
+async function closeNotFoundError() {
+  error.classList.remove("show");
 }
 
 function toCelsius(value) {
