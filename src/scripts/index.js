@@ -1,4 +1,5 @@
 import "../styles/style.css";
+import { createClient } from "pexels";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = [
@@ -33,11 +34,17 @@ const OPTIONTIME = {
 
 const weatherAPI =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-const key = "43GQQ65K28BCAUG6QME297TQD";
+const weatherKey = "43GQQ65K28BCAUG6QME297TQD";
+
+const pexelsClient = createClient(
+  "PGTLBTxH7j2OBf74YxbWddjeq9umPhfKiPGU8zoqcDiSUSQIEeXftb0w",
+);
 
 const locationText = document.querySelector("#location > h2");
+const todayDisplay = document.querySelector("#today");
 const dateText = document.querySelector("#date");
 const timeText = document.querySelector("#time");
+const creditText = document.querySelector("#photographer");
 const commentText = document.querySelector("#comment");
 const weatherIcon = document.querySelector("#weather-icon");
 const tempRealText = document.querySelector("#temp-real");
@@ -67,13 +74,27 @@ async function fetchWeatherData(city) {
   currentDate.setTime(currentDate.getTime() + 3 * 24 * 60 * 60 * 1000);
   const end = currentDate.toISOString().slice(0, 10);
 
-  const response = await fetch(
-    `${weatherAPI}${city}/${start}/${end}?unitGroup=us&elements=datetime%2Caddress%2Ctemp%2Cfeelslike%2Cconditions%2Cdescription%2Cicon&key=${key}&contentType=json`,
-    {
-      method: "GET",
-      headers: {},
-    },
-  );
+  const request = `${weatherAPI}${city}/${start}/${end}?unitGroup=us&elements=datetime%2Caddress%2Ctemp%2Cfeelslike%2Cconditions%2Cdescription%2Cicon&key=${weatherKey}&contentType=json`;
+
+  return await sendAPIRequest(request);
+}
+
+async function fetchRandomPhoto(query) {
+  const data = await pexelsClient.photos
+    .search({ query, "per-page": 1 })
+    .then((photos) => {
+      return photos;
+    });
+
+  return data;
+}
+
+async function sendAPIRequest(request, cors = false) {
+  const response = await fetch(request, {
+    mode: cors ? "no-cors" : "cors",
+    method: "GET",
+    headers: {},
+  });
 
   let asJSON = false;
   try {
@@ -152,6 +173,7 @@ optionsBar.addEventListener("click", async (e) => {
     currentData = await fetchWeatherData(city);
     if (currentData) {
       await displayWeatherData(currentData);
+      await displayRandomBackground();
       updateTimeDateDisplay(true);
     } else {
       displayNotFoundError(city);
@@ -219,6 +241,17 @@ async function displayWeatherData(data) {
   });
 }
 
+async function displayRandomBackground() {
+  const query = `${currentData.resolvedAddress} ${currentData.days[0].icon.replace("-", " ")}`;
+  const photos = await fetchRandomPhoto(query);
+
+  const photoData = photos.photos[Math.floor(Math.random() * 10)];
+  creditText.textContent = photoData.photographer;
+  creditText.setAttribute("href", photoData.url);
+
+  todayDisplay.style.backgroundImage = `url(${photoData.src.large})`;
+}
+
 async function updateTimeDateDisplay(oneshot = false) {
   const currentDate = new Date();
 
@@ -266,5 +299,6 @@ window.onload = async (e) => {
 
   currentData = await fetchWeatherData("jakarta");
   await displayWeatherData(currentData);
+  await displayRandomBackground();
   await updateTimeDateDisplay();
 };
